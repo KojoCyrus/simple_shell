@@ -1,30 +1,51 @@
 #include "shell.h"
 
 /**
- *_printerr - a function that prints a message tot he standard error
- *@cmmd: this is the command name
- *@text: this is the erros messahe to be printed
-*/
-void _printerr(char *cmmd, char *text)
-{
-	int a;
+ * read_ht -> Reads history file into a linked list
+ *
+ * @info: Pointer
+ *
+ * Return: Depend Condition
+ */
 
-	if (cmmd != NULL)
-	{
-		a = 0;
-		while (cmmd[a] != '\0')
+int read_ht(info_t *info)
+{
+	int i, last = 0, linecount = 0;
+	ssize_t fd, rdlen, fsize = 0;
+	struct stat st;
+	char *buf = NULL, *filename = get_ht(info);
+
+	if (!filename)
+		return (0);
+	fd = open(filename, O_RDONLY);
+	free(filename);
+	if (fd == -1)
+		return (0);
+	if (!fstat(fd, &st))
+		fsize = st.st_size;
+	if (fsize < 2)
+		return (0);
+	buf = malloc(sizeof(char) * (fsize + 1));
+	if (!buf)
+		return (0);
+	rdlen = read(fd, buf, fsize);
+	buf[fsize] = 0;
+	if (rdlen <= 0)
+		return (free(buf), 0);
+	close(fd);
+	for (i = 0; i < fsize; i++)
+		if (buf[i] == '\n')
 		{
-			write(2, &cmmd[a], 1);
-			a++;
+			buf[i] = 0;
+			build_history_list(info, buf + last, linecount++);
+			last = i + 1;
 		}
-	}
-	if (text != NULL)
-	{
-		a = 0;
-		while (text[a] != '\0)
-		{
-			write(2, &text[a], 1);
-			a++;
-		}
-	}
+	if (last != i)
+		build_history_list(info, buf + last, linecount++);
+	free(buf);
+	info->histcount = linecount;
+	while (info->histcount-- >= HIST_MAX)
+		delete_node(&(info->history), 0);
+	renumber_history(info);
+	return (info->histcount);
 }

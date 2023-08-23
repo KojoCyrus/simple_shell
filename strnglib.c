@@ -1,132 +1,111 @@
 #include "shell.h"
 
 /**
- *_strncpy - c function that copies n bytes from src to dest
- *@dest: is the destination string
- *@src: is the string source
- *@n: is the nuber of bytes to copy
+ * *_strchr -> Locate character in string
  *
- *Return: should return dest
+ * @s: String
+ * @c: Character
+ *
+ * Return: Depend Condition
  */
-char *_strncpy(char *dest, char *src, size_t n)
-{
-	size_t a;
 
-	for (a = 0; a < n && src[a] != '\0'; a++)
-		dest[a] = src[a];
-	while (a < n)
+char *_strchr(char *s, char c)
+{
+	int i;
+
+	for (i = 0; s[i] >= '\0'; i++)
 	{
-		dest[a] = '\0';
-		a++;
+		if (s[i] == c)
+			return (s + i);
 	}
+	return ('\0');
+}
+
+/**
+ * *_strcpy -> Copy String From Source Into Destinse
+ *
+ * @dest: Empty Input
+ * @src: Input Source
+ *
+ * Return: Destinse String
+ */
+
+char *_strcpy(char *dest, char *src)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
 	return (dest);
 }
 
 /**
- *custom_concat - concate two stings with separator between them
- *@str1: this is the first string
- *@str2: this is the second string
- *@separator: this is the separaator
+ * _strlen -> The length of a string
  *
- *Return: should retur the conc of the three
+ * @s: Input
+ *
+ * Return: i String Length
  */
-char *custom_concat(char *str1, char *str2, char separator)
+
+int _strlen(char *s)
 {
-	size_t len1, len2, sep_len, a;
-	char *result;
+	int i;
 
-	len1 = len2 = 0;
-	sep_len = 1;
-	while (str1[len1] != '\0')
-		len1++;
-	while (str2[len2] != '\0')
-		len2++;
-	result = (char *)malloc(len1 + len2 + sep_len + 1);
-	if (result == NULL)
-		return (NULL);
-
-	_strncpy(result, str1, len1);
-	result[len1] = separator;
-	for (a = 0; a < len2; a++)
-		result[len1 + sep_len + a] = str2[a];
-	result[len1 + sep_len + len2] = '\0';
-	return (result);
+	for (i = 0; s[i] != '\0'; i++)
+	{
+		continue;
+	}
+	return (i);
 }
 
 /**
- *_strncmp - a function that compares n bytes of 2 strings
- *@s1: is the string 1
- *@s2: is the string 2
- *@n: number of bytes to compare
+ * *_strcat -> Appends the src string to the dest string
  *
- *Return: should return 0 or -15
+ * @dest: Destination Input
+ * @src: Source Input
+ *
+ * Return: Destination
  */
-int _strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t a;
 
-	for (a = 0; s1[a] && s2[a] && a < n; a++)
+char *_strcat(char *dest, char *src)
+{
+	int i;
+	int j;
+
+	i = _strlen(dest);
+	for (j = 0; src[j] != '\0'; j++)
 	{
-		if (s1[a] > s2[a])
-			return (s1[a] - s2[a]);
-		else if (s1[a] < s2[a])
-			return (s1[a] - s2[a]);
+		dest[i] = src[j];
+		i++;
 	}
-	if (a == n)
-		return (0);
-	else
-		return (-15);
+	dest[i] = '\0';
+	return (dest);
 }
 
 /**
- *_strdup - a function that dupmicates string
- *@s: is a string to be duplicated
+ * _strcmp ->  Compares two strings
  *
- *Return: should return the resulting string
- */
-char *_strdup(const char *s)
-{
-	int a, len = 0;
-	char *new_str;
-
-	if (s == NULL)
-		return (NULL);
-	while (s[len] != '\0')
-		len++;
-	new_str = (char *)malloc((len + 1) * sizeof(char));
-	if (new_str == NULL)
-		return (NULL);
-	for (a = 0; a <= len; a++)
-		new_str[a] = s[a];
-	return (new_str);
-}
-
-/**
- *_inttostr - a function that converts int in string
- *@num: the int to be converted
+ * @s1: First Input
+ * @s2: Second Input
  *
- *Return: should return the string resulting from num
+ * Return: 0 Or Different (Condition)
  */
-char *_inttostr(int num)
-{
-	int a, len = 1;
-	int temp = num;
-	char *str;
 
-	while (temp /= 10)
+int _strcmp(char *s1, char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] != '\0' || s2[i] != '\0')
 	{
-		len++;
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
 	}
-	str = (char *)malloc((len + 1) * sizeof(char));
-	if (str == NULL)
-		return (NULL);
-	a = len - 1;
-	str[len] = '\0';
-	while (num != 0)
-	{
-		str[a] = '0' + (num % 10);
-		num /= 10;
-		a--;
-	}
-	return (str);
+	return (0);
 }

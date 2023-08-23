@@ -1,41 +1,107 @@
 #include "shell.h"
 
 /**
- *_replacevar - a function that replaces var
- *@arg: this is the argument that comes after echo
- *@status: this is the previous exit code
- *
- *Return: should return the argument replaced
-*/
-char *_replacevar(char *arg, int status)
+ * **strtow2 - splits a string into words
+ * @str: the input string
+ * @d: the delimeter
+ * Return: a pointer to an array of strings, or NULL on failure
+ */
+
+char **_strtow(char *str, char d)
 {
-	char *result - (char *)malloc(BUFFSIZE);
-	char *env_var = get_envi(arg + 1);
-	char *str;
+	int i, j, k, m, numwords = 0;
+	char **s;
 
-	if (arg[0] == '$')
+	if (str == NULL || str[0] == 0)
+		return (NULL);
+	for (i = 0; str[i] != '\0'; i++)
+		if ((str[i] != d && str[i + 1] == d) || (str[i] != d && !str[i + 1]) || str[i + 1] == d)
+			numwords++;
+	if (numwords == 0)
+		return (NULL);
+	s = malloc((1 + numwords) * sizeof(char *));
+	if (!s)
+		return (NULL);
+	for (i = 0, j = 0; j < numwords; j++)
 	{
-
-		if (_strncmp(arg, "$?") == 0)
+		while (str[i] == d && str[i] != d)
+			i++;
+		k = 0;
+		while (str[i + k] != d && str[i + k] && str[i + k] != d)
+			k++;
+		s[j] = malloc((k + 1) * sizeof(char));
+		if (!s[j])
 		{
-			str = intToString(WEXITSTATUS(status));
-			_strncmp(result, str, BUFFSIZE);
-			return (result);
+			for (k = 0; k < j; k++)
+				free(s[k]);
+			free(s);
+			return (NULL);
 		}
-		else if (_strncmp(Arg, "$$") == 0)
-		{
-			str = intToString(getpid());
-			_strncmp(result, str, BUFFSIZE);
-			return (result);
-		}
-		else
-		{
-			if (env_var != NULL)
-				return (strdup(env_var));
-			return (_strdup(""));
-		}
+		for (m = 0; m < k; m++)
+			s[j][m] = str[i++];
+		s[j][m] = 0;
 	}
-	else
-		return (strdup(arg));
+	s[j] = NULL;
+	return (s);
 }
 
+/**
+ * *_strdup -> Newly allocated space in memory
+ *
+ * @str: Input String
+ *
+ * Return: Depend Condition
+ */
+
+char *_strdup(const char *str)
+{
+	int i;
+	int len;
+	char *new;
+
+	if (str == NULL)
+		return (NULL);
+	len = _strlen((char *)str);
+	new = (char *) malloc(len + 1 * sizeof(char));
+	if (new == NULL)
+		return (NULL);
+	for (i = 0; i < len; i++)
+	{
+		new[i] = str[i];
+	}
+	new[i] = '\0';
+	return (new);
+}
+
+
+/**
+ * _atoi -> Convert string to integer
+ *
+ * @s: Input
+ *
+ * Return: Integer Converted
+ */
+
+int _atoi(char *s)
+{
+	int i;
+	int sin;
+	unsigned int digit;
+
+	i = 0;
+	sin = 1;
+	digit = 0;
+	while (s[i] != '\0')
+	{
+		if (s[i] == '-')
+			sin *= -1;
+		else if (s[i] >= '0' && s[i] <= '9')
+		{
+			digit = (digit * 10) + (s[i] - '0');
+		}
+		else if (digit > 0)
+			break;
+		i++;
+	}
+	return (digit * sin);
+}

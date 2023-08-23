@@ -1,39 +1,115 @@
 #include "shell.h"
 
 /**
- *_strngchr - a function for sting character
- *@s: is a pointer tot he string
- *@z: is a character
+ * _putchar -> Writes the character c to stdout
  *
- *Return: should return the string
+ * @c: The character to print
+ *
+ * Return: On success 1.
 */
-char *_strngchr(char *s, char z)
-{
-	int a;
 
-	for (a = 0; s[a]; a++)
+int _putchar(char c)
+{
+	static int i;
+	static char buf[WRITE_BUF_SIZE];
+
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
-		if (s[a] == z)
-			return (s + a);
+		write(1, buf, i);
+		i = 0;
 	}
-	return (NULL);
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
+	return (1);
 }
 
 /**
- * _strngcmp - a function that compares s1 and s2
- *@s1: this is string 1
- *@s2: this is string 2
+ * _puts -> Prints a string
  *
- * Return: should return  on success, or else return the difference
-*/
-int _strngcmp(char *s1, char *s2)
+ * @str: Input
+ */
+
+void _puts(char *str)
 {
-	while (*s1 && *s2 && *s1 == *s2)
+	int i;
+
+	for (i = 0; str[i] != '\0'; i++)
 	{
-		s1++;
-		s2++;
+		_putchar(str[i]);
 	}
-	if (*s1 != *s2)
-		return (*s1 - *s2);
-	return (0);
+}
+
+/**
+ * _isalpha -> checks for a alphabetic character
+ *
+ * @c: Character Of _isalpha
+ *
+ * Return: 1 and 0 (Condition)
+ */
+
+int _isalpha(int c)
+{
+	if (c >= 'a' && c <= 'z')
+	{
+		return (1);
+	}
+	else if (c >= 'A' &&  c <= 'Z')
+	{
+		return (1);
+	}
+	else
+		return (0);
+}
+
+/**
+ * *_strncpy -> Copy Number Of String From Source Into Destinse
+ *
+ * @dest: Empty Input
+ * @src: Input Source
+ * @n: Input Number
+ *
+ * Return: Destinse String
+ */
+
+char *_strncpy(char *dest, char *src, int n)
+{
+	int i;
+
+	i = 0;
+	while (src[i] != '\0' && i < n)
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
+}
+
+/**
+ * *_strncat -> Appends Selected Number Elements src string to the dest string
+ *
+ * @dest: Destination Input
+ * @src: Source Input
+ * @n: Number Elements
+ *
+ * Return: Destination
+ */
+
+char *_strncat(char *dest, char *src, int n)
+{
+	int i;
+	int j;
+
+	i = _strlen(dest);
+	for (j = 0; dest[j] != '\0' && j < n; j++)
+	{
+		dest[i] = src[j];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
